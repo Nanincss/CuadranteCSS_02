@@ -109,6 +109,7 @@ app.post('/api/login', async (req, res) => {
         }
         res.json(user);
     } catch (err) {
+        console.error('Error en la ruta /api/login:', err);
         res.status(500).json({ message: err.message });
     }
 });
