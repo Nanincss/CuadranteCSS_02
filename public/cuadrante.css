@@ -1,0 +1,472 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #0056b3;
+    margin-top: 0;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+#search-input {
+    width: 300px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#clear-search-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #888;
+}
+
+#search-results-count { font-size: 0.9em; color: #555; }
+
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#print-btn { padding: 10px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+#print-btn:hover { background-color: #5a6268; }
+
+/* --- Estilos de Búsqueda Global --- */
+#global-search-results-container {
+    max-width: 90%;
+    margin: 20px auto 0 auto;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+#global-search-results-container h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #343a40;
+}
+#global-search-results {
+    list-style: none;
+    padding: 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+#global-search-results li {
+    padding: 10px;
+    border-bottom: 1px solid #e9ecef;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+#global-search-results li:last-child { border-bottom: none; }
+#global-search-results li:hover { background-color: #e8f0fe; }
+#global-search-results .date { font-weight: bold; color: #0056b3; }
+#global-search-results .content { font-style: italic; color: #6c757d; margin-left: 10px; }
+
+.control-group button {
+    padding: 6px 10px;
+    background-color: #e9ecef;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    line-height: 1;
+}
+.control-group button:hover { background-color: #dee2e6; }
+
+label {
+    font-weight: bold;
+}
+
+select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 1em;
+}
+
+main {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#calendar {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.print-only {
+    display: none;
+}
+
+#calendar th, #calendar td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: top;
+    height: 150px;
+}
+
+/* Estilo para celdas que coinciden con la búsqueda */
+#calendar td.highlight {
+    border: 3px solid #ffc107;
+}
+
+/* Estilo para la celda de destino de la búsqueda global */
+#calendar td.highlight-target {
+    animation: highlight-fade 2s ease-out;
+}
+
+#calendar th {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 12px 8px;
+}
+
+.day-number {
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: right;
+    margin-bottom: 5px;
+}
+
+.today .day-number {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+}
+
+.other-month {
+    background-color: #f9f9f9;
+    color: #aaa;
+}
+
+.cell-content {
+    font-size: 0.9em;
+    min-height: 20px;
+    padding: 4px;
+    border: 1px dashed transparent;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+/* Simula el placeholder para divs editables */
+.cell-content:empty::before {
+    content: attr(data-placeholder);
+    color: #aaa;
+    font-style: italic;
+    cursor: text;
+}
+
+.cell-content:focus {
+    background-color: #e8f0fe;
+    border: 1px dashed #0056b3;
+    outline: none;
+}
+
+.editor-info {
+    font-size: 0.7em;
+    color: #888;
+    text-align: right;
+    margin-top: 8px;
+    font-style: italic;
+    height: 12px; /* Reserve space */
+}
+
+/* --- Estilos para Archivos Adjuntos --- */
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0;
+    font-size: 0.8em;
+}
+
+.file-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+}
+
+.file-link {
+    color: #0056b3;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+.file-link:hover { text-decoration: underline; }
+
+.delete-file-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 0 5px;
+}
+
+.add-file-btn {
+    font-size: 0.75em;
+    padding: 2px 6px;
+    margin-top: 5px;
+    background-color: #e9ecef;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* --- Estilos para Imágenes --- */
+.image-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.image-preview {
+    max-width: 80px;
+    max-height: 80px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.delete-image-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.8em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.upload-image-btn {
+    font-size: 0.75em;
+    padding: 2px 6px;
+    margin-top: 5px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.upload-image-btn:hover {
+    background-color: #218838;
+}
+
+/* --- Estilos de la Ventana Modal --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 450px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #0056b3;
+    margin-bottom: 20px;
+}
+
+#user-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#user-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+#user-list li:last-child { border-bottom: none; }
+
+#user-list input {
+    border: none;
+    background-color: transparent;
+    padding: 6px;
+    font-size: 1em;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+#user-list input:focus { outline: 1px solid #007bff; border-radius: 2px; }
+
+.delete-user-btn {
+    background-color: #fbebeb;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.delete-user-btn:hover { background-color: #dc3545; color: white; }
+
+.add-user-form { display: flex; gap: 10px; margin-bottom: 20px; }
+.add-user-form input { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+
+#add-user-btn { background-color: #28a745; color: white; }
+#close-modal-btn { background-color: #007bff; color: white; float: right; }
+
+#add-user-btn, #close-modal-btn { padding: 10px 15px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
+
+/* --- Estilos para Impresión --- */
+@media print {
+    body {
+        padding: 0;
+        background-color: white;
+        font-size: 9pt; /* Reducir fuente para que quepa más */
+        -webkit-print-color-adjust: exact; /* Forzar impresión de colores en Chrome */
+        print-color-adjust: exact;
+    }
+
+    .print-only {
+        display: block;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    /* Ocultar todos los elementos no necesarios en papel */
+    header, .add-file-btn, .delete-file-btn, .file-list {
+        display: none;
+    }
+
+    main { box-shadow: none; border: none; padding: 0; }
+    #calendar { page-break-inside: avoid; } /* Intentar que la tabla no se corte entre páginas */
+
+    #calendar th, #calendar td {
+        border: 1px solid #aaa; /* Borde más suave */
+        height: auto; /* Altura automática según el contenido */
+        padding: 4px;
+        overflow-wrap: break-word; /* Evitar que el texto se salga */
+    }
+
+    #calendar th { background-color: #e9ecef !important; color: black !important; }
+    .today .day-number { background: none !important; color: black !important; border: 1px solid black; }
+    .cell-content { min-height: 0; padding: 2px; font-size: 0.9em; }
+    .cell-content:empty::before { content: ""; } /* Ocultar placeholders */
+    .editor-info { font-size: 0.8em; color: #555 !important; }
+    /* Ocultar resaltados de búsqueda */
+    #calendar td.highlight, #calendar td.highlight-target { border: 1px solid #aaa; background-color: transparent !important; animation: none; }
+}
+
+@keyframes highlight-fade {
+    from { background-color: #ffc107; }
+    to { background-color: transparent; }
+}
+
+/* --- Estilos para el Login --- */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-form input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.1em;
+}
+
+.login-form button {
+    padding: 12px;
+    font-size: 1.1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.login-form button:hover {
+    background-color: #218838;
+}
