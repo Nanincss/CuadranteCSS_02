@@ -292,13 +292,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 };
 
+                const printDayBtn = document.createElement('button');
+                printDayBtn.className = 'print-day-btn';
+                printDayBtn.textContent = 'Imprimir';
+                printDayBtn.title = 'Imprimir imágenes del día';
+                // Mostrar solo si hay imágenes
+                if (!dayData.imageUrls || dayData.imageUrls.length === 0) {
+                    printDayBtn.style.display = 'none';
+                }
+                printDayBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    printDayImages(dateKey);
+                };
+
                 cell.append(dayNumberDiv,
                     createContentDiv('name', 'Nombre...', dayData.name),
                     createContentDiv('address', 'Dirección...', dayData.address),
                     createContentDiv('phone', 'Teléfono...', dayData.phone),
                     editorInfoDiv,
                     imageContainer,
-                    uploadImageBtn);
+                    uploadImageBtn,
+                    printDayBtn);
 
                 weekRow.appendChild(cell);
             }
@@ -495,6 +509,31 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error al eliminar imagen:', error);
             alert('Error al eliminar la imagen: ' + error.message);
         }
+    }
+
+    function printDayImages(dateKey) {
+        const dayData = monthData[dateKey];
+        if (!dayData || !dayData.imageUrls || dayData.imageUrls.length === 0) {
+            alert('No hay imágenes para imprimir en este día.');
+            return;
+        }
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Imprimir Imágenes</title>');
+        printWindow.document.write('<style>body { margin: 20px; } img { max-width: 100%; height: auto; display: block; margin-bottom: 20px; page-break-inside: avoid; } @media print { @page { size: auto; margin: 20mm; } body { margin: 0; } }</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(`<h2>Imágenes del ${dateKey}</h2>`);
+        dayData.imageUrls.forEach(url => {
+            printWindow.document.write(`<img src="${url}">`);
+        });
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.onload = function() {
+            printWindow.focus(); // Focus on the new window is important for some browsers
+            printWindow.print();
+            // Consider not closing the window automatically to allow user to save as PDF
+            // printWindow.close();
+        };
     }
 
     // --- SOCKET.IO LISTENERS ---
