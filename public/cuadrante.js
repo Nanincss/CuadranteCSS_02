@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
     const MAX_YEAR = 2030;
-    const API_URL = ''; // URL del backend ES RELATIVA
+    const API_URL = 'https://cuadrantecss-02.onrender.com/'; // URL del backend ES RELATIVA
 
     // --- REFERENCIAS A ELEMENTOS DEL DOM ---
     const userGreeting = document.getElementById('user-greeting');
@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const monthSelect = document.getElementById('month-select');
     const yearSelect = document.getElementById('year-select');
     const printTitle = document.getElementById('print-title');
+    const printCalendarBtn = document.getElementById('print-calendar-btn');
 
     // --- Login Modal ---
     const loginModal = document.getElementById('login-modal');
@@ -320,6 +321,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- INICIALIZACIÓN DE LA APP PRINCIPAL ---
 
+    // --- FUNCIONES DE IMPRESIÓN ---
+    function printCalendar() {
+        // Ocultar elementos que no deben imprimirse
+        document.querySelector('header .controls').classList.add('no-print');
+        document.getElementById('user-modal').classList.add('no-print');
+        document.getElementById('login-modal').classList.add('no-print');
+        document.getElementById('report-modal').classList.add('no-print');
+        document.getElementById('image-upload-input').classList.add('no-print');
+        
+        // Mostrar el título de impresión
+        printTitle.style.display = 'block';
+
+        // Esperar un poco para que el DOM se actualice antes de imprimir
+        setTimeout(() => {
+            window.print();
+            // Restaurar la visibilidad después de imprimir
+            document.querySelector('header .controls').classList.remove('no-print');
+            document.getElementById('user-modal').classList.remove('no-print');
+            document.getElementById('login-modal').classList.remove('no-print');
+            document.getElementById('report-modal').classList.remove('no-print');
+            document.getElementById('image-upload-input').classList.remove('no-print');
+            printTitle.style.display = 'none'; // Ocultar de nuevo el título de impresión
+        }, 300); // Pequeño retraso
+    }
+
+    // --- INICIALIZACIÓN DE LA APP PRINCIPAL ---
+
     async function mainAppInit() {
         console.log('mainAppInit called');
         document.getElementById('main-container').style.display = 'block';
@@ -358,8 +386,9 @@ document.addEventListener('DOMContentLoaded', function() {
             userModal.style.display = 'none';
         });
 
+        // Event listener para el botón de imprimir
+        printCalendarBtn.addEventListener('click', printCalendar);
         
-
         addUserBtn.addEventListener('click', () => {
             const userData = {
                 name: newUserNameInput.value.trim(),
@@ -535,6 +564,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     socket.on('calendarEntryUpdated', (updatedEntry) => {
+        console.log('Evento calendarEntryUpdated recibido:', updatedEntry); // Añadir este log
         const entryDate = new Date(updatedEntry.dateKey);
         if (entryDate.getFullYear() === currentYear && entryDate.getMonth() === currentMonth) {
             monthData[updatedEntry.dateKey] = updatedEntry;
