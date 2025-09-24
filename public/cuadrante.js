@@ -332,8 +332,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let reportHTML = '<ul>';
             for (const log of logs) {
+                if (log === null || log === undefined) {
+                    console.warn('Skipping null/undefined log entry.');
+                    continue;
+                }
                 // Defensive checks for log object and its properties
-                if (!log || !log.date || !log.user || !log.action || log.entryDateKey === null || log.entryDateKey === undefined) {
+                if (!log.date || !log.user || !log.action || log.entryDateKey === null || log.entryDateKey === undefined) {
                     console.warn('Skipping malformed log entry:', log);
                     continue; // Skip this log entry if it's malformed
                 }
