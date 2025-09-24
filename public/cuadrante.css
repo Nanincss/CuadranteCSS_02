@@ -470,3 +470,35 @@ main {
 .login-form button:hover {
     background-color: #218838;
 }
+
+/* --- Estilos para Impresión de Imagen Individual --- */
+#single-image-print-container {
+    display: none; /* Oculto por defecto */
+}
+
+@media print {
+    body.printing-single-image > *:not(#single-image-print-container) {
+        display: none !important;
+    }
+
+    body.printing-single-image #single-image-print-container {
+        display: block !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    body.printing-single-image #single-image-print-container img {
+        max-width: 95%;
+        max-height: 95vh;
+        object-fit: contain;
+    }
+}

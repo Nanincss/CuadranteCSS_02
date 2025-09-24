@@ -267,6 +267,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         const img = document.createElement('img');
                         img.src = url;
                         img.className = 'image-preview';
+                        img.onclick = (e) => {
+                            e.stopPropagation(); // Evitar que el click se propague a la celda
+                            printSingleImage(url);
+                        };
                         const deleteImgBtn = document.createElement('button');
                         deleteImgBtn.className = 'delete-image-btn';
                         deleteImgBtn.textContent = 'X';
@@ -335,13 +339,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(`${API_URL}/api/logs/${year}/${month + 1}`);
             const logs = await response.json();
 
-            if (logs.length === 0) {
+            if (!logs || logs.length === 0) { // Added !logs check
                 reportContent.innerHTML = '<p>No hay cambios para este mes.</p>';
                 return;
             }
 
             let reportHTML = '<ul>';
             for (const log of logs) {
+                // Defensive checks for log object and its properties
+                if (!log || !log.date || !log.user || !log.action || !log.entryDateKey) {
+                    console.warn('Skipping malformed log entry:', log);
+                    continue; // Skip this log entry if it's malformed
+                }
+
                 const logDate = new Date(log.date).toLocaleString('es-ES');
                 let changes = '';
 
@@ -490,6 +500,11 @@ document.addEventListener('DOMContentLoaded', function() {
         renderCalendar(currentYear, currentMonth);
     }
 
+    printDayBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    printAllDayImages(dateKey);
+                };
+            
     async function deleteImage(dateKey, imageUrlToDelete) {
         if (loggedInUser.role === 'viewer') {
             alert('No tienes permiso para eliminar imágenes.');
@@ -511,7 +526,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function printDayImages(dateKey) {
+    function printAllDayImages(dateKey) {
         const dayData = monthData[dateKey];
         if (!dayData || !dayData.imageUrls || dayData.imageUrls.length === 0) {
             alert('No hay imágenes para imprimir en este día.');
@@ -533,6 +548,39 @@ document.addEventListener('DOMContentLoaded', function() {
             printWindow.print();
             printWindow.close();
         };
+    }
+
+    function printSingleImage(imageUrl) {
+        // Crear un contenedor temporal para la imagen
+        const printContainer = document.createElement('div');
+        printContainer.id = 'single-image-print-container';
+        printContainer.style.display = 'none'; // Ocultar por defecto
+
+        const imgToPrint = document.createElement('img');
+        imgToPrint.src = imageUrl;
+        imgToPrint.style.maxWidth = '100%';
+        imgToPrint.style.height = 'auto';
+        imgToPrint.style.display = 'block';
+        imgToPrint.style.margin = '0 auto';
+
+        printContainer.appendChild(imgToPrint);
+        document.body.appendChild(printContainer);
+
+        // Añadir una clase al body para activar los estilos de impresión
+        document.body.classList.add('printing-single-image');
+
+        // Configurar el evento afterprint para limpiar
+        const cleanup = () => {
+            document.body.classList.remove('printing-single-image');
+            if (document.getElementById('single-image-print-container')) {
+                document.body.removeChild(document.getElementById('single-image-print-container'));
+            }
+            window.removeEventListener('afterprint', cleanup);
+        };
+        window.addEventListener('afterprint', cleanup);
+
+        // Imprimir
+        window.print();
     }
 
     // --- SOCKET.IO LISTENERS ---
