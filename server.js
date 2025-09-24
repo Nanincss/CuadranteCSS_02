@@ -50,8 +50,8 @@ async function createDefaultAdmin() {
         const userCount = await User.countDocuments();
         if (userCount === 0) {
             const defaultAdmin = new User({
-                name: 'Gustavo',
-                identifier: '3434',
+                name: 'Nanin',
+                identifier: 'sevilla',
                 role: 'admin'
             });
             await defaultAdmin.save();
