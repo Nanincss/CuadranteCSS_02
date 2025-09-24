@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
     const MAX_YEAR = 2030;
-    const API_URL = 'https://cuadrantecss-02.onrender.com/'; // URL del backend ES RELATIVA
+    const API_URL = 'https://cuadrantecss-02.onrender.com'; // URL del backend ES RELATIVA
 
     // --- REFERENCIAS A ELEMENTOS DEL DOM ---
     const userGreeting = document.getElementById('user-greeting');
