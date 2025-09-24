@@ -4,6 +4,7 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
 const multer = require('multer'); // Importar multer
+const cloudinary = require('cloudinary').v2;
 
 require('dotenv').config(); // Para cargar variables de entorno desde un archivo .env
 
@@ -23,19 +24,16 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cuadra
 app.use(cors());
 app.use(express.json()); // Para parsear cuerpos de solicitud JSON
 app.use(express.static('public')); // Servir archivos estáticos desde la carpeta 'public'
-app.use('/uploads', express.static('uploads')); // Servir archivos estáticos desde la carpeta 'uploads'
 
-// --- Configuración de Multer para subida de archivos ---
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Directorio donde se guardarán los archivos
-    },
-    filename: function (req, file, cb) {
-        // Generar un nombre de archivo único
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop());
-    }
+// --- Configuración de Cloudinary ---
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+// --- Configuración de Multer para subida en memoria ---
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // --- Conexión a MongoDB ---
@@ -269,9 +267,24 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     if (!req.file) {
         return res.status(400).send('No se ha subido ningún archivo.');
     }
-    // La URL de la imagen será /uploads/nombre_del_archivo
-    const imageUrl = `/uploads/${req.file.filename}`;
-    res.status(200).json({ imageUrl: imageUrl });
+
+    // Crear un stream de subida a Cloudinary
+    const uploadStream = cloudinary.uploader.upload_stream(
+        { 
+            folder: "cuadrante" // Opcional: para organizar las imágenes en una carpeta en Cloudinary
+        },
+        (error, result) => {
+            if (error) {
+                console.error('Error al subir a Cloudinary:', error);
+                return res.status(500).send('Error interno al subir la imagen.');
+            }
+            // `result.secure_url` contiene la URL https de la imagen
+            res.status(200).json({ imageUrl: result.secure_url });
+        }
+    );
+
+    // Enviar el buffer del archivo (desde la memoria) al stream de Cloudinary
+    uploadStream.end(req.file.buffer);
 });
 
 
