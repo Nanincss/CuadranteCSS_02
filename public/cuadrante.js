@@ -531,8 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
         printWindow.onload = function() {
             printWindow.focus(); // Focus on the new window is important for some browsers
             printWindow.print();
-            // Consider not closing the window automatically to allow user to save as PDF
-            // printWindow.close();
+            printWindow.close();
         };
     }
 
