@@ -296,27 +296,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 };
 
-                const printDayBtn = document.createElement('button');
-                printDayBtn.className = 'print-day-btn';
-                printDayBtn.textContent = 'Imprimir';
-                printDayBtn.title = 'Imprimir imágenes del día';
-                // Mostrar solo si hay imágenes
-                if (!dayData.imageUrls || dayData.imageUrls.length === 0) {
-                    printDayBtn.style.display = 'none';
-                }
-                printDayBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    printDayImages(dateKey);
-                };
-
                 cell.append(dayNumberDiv,
                     createContentDiv('name', 'Nombre...', dayData.name),
                     createContentDiv('address', 'Dirección...', dayData.address),
                     createContentDiv('phone', 'Teléfono...', dayData.phone),
                     editorInfoDiv,
                     imageContainer,
-                    uploadImageBtn,
-                    printDayBtn);
+                    uploadImageBtn);
 
                 weekRow.appendChild(cell);
             }
@@ -347,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let reportHTML = '<ul>';
             for (const log of logs) {
                 // Defensive checks for log object and its properties
-                if (!log || !log.date || !log.user || !log.action || !log.entryDateKey) {
+                if (!log || !log.date || !log.user || !log.action || log.entryDateKey === null || log.entryDateKey === undefined) {
                     console.warn('Skipping malformed log entry:', log);
                     continue; // Skip this log entry if it's malformed
                 }
