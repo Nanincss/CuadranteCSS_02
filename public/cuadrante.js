@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- REFERENCIAS A ELEMENTOS DEL DOM ---
     const userGreeting = document.getElementById('user-greeting');
     const manageUsersBtn = document.getElementById('manage-users-btn');
-    const reportBtn = document.getElementById('report-btn');
+    
     const calendarTable = document.getElementById('calendar');
     const monthSelect = document.getElementById('month-select');
     const yearSelect = document.getElementById('year-select');
@@ -29,10 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addUserBtn = document.getElementById('add-user-btn');
     const closeModalBtn = document.getElementById('close-modal-btn');
 
-    // --- Report Modal ---
-    const reportModal = document.getElementById('report-modal');
-    const reportContent = document.getElementById('report-content');
-    const closeReportModalBtn = document.getElementById('close-report-modal-btn');
+    
     const imageUploadInput = document.getElementById('image-upload-input');
 
     // --- ESTADO DE LA APLICACIÓN ---
@@ -155,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function applyPermissions() {
         if (loggedInUser.role !== 'admin') {
             manageUsersBtn.style.display = 'none';
-            reportBtn.style.display = 'none';
         }
     }
 
@@ -320,54 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
         calendarTable.appendChild(tbody);
     }
 
-    async function showReport(year, month) {
-        try {
-            const response = await fetch(`${API_URL}/api/logs/${year}/${month + 1}`);
-            const logs = await response.json();
-
-            if (!logs || logs.length === 0) { // Added !logs check
-                reportContent.innerHTML = '<p>No hay cambios para este mes.</p>';
-                return;
-            }
-
-            let reportHTML = '<ul>';
-            for (const log of logs) {
-                if (log === null || log === undefined) {
-                    console.warn('Skipping null/undefined log entry.');
-                    continue;
-                }
-                // Defensive checks for log object and its properties
-                if (!log.date || !log.user || !log.action || log.entryDateKey === null || log.entryDateKey === undefined) {
-                    console.warn('Skipping malformed log entry:', log);
-                    continue; // Skip this log entry if it's malformed
-                }
-
-                const logDate = new Date(log.date).toLocaleString('es-ES');
-                let changes = '';
-
-                if (log.action === 'create') {
-                    changes = `Se creó una nueva entrada para el ${log.entryDateKey}.`;
-                } else if (log.action === 'delete') {
-                    changes = `Se eliminó la entrada del ${log.entryDateKey}.`;
-                } else if (log.action === 'update') {
-                    changes = `Se actualizó la entrada del ${log.entryDateKey}.<br>`;
-                    for (const key in log.newData) {
-                        if (key !== '_id' && key !== '__v' && log.newData[key] !== log.previousData[key]) {
-                            changes += `&nbsp;&nbsp;- ${key}: de "${log.previousData[key]}" a "${log.newData[key]}"<br>`;
-                        }
-                    }
-                }
-
-                reportHTML += `<li><strong>${logDate}</strong> - Usuario: ${log.user} - Acción: ${log.action}<br>${changes}</li>`;
-            }
-            reportHTML += '</ul>';
-
-            reportContent.innerHTML = reportHTML;
-        } catch (error) {
-            console.error('Error al cargar el informe:', error);
-            reportContent.innerHTML = '<p>Error al cargar el informe.</p>';
-        }
-    }
+    
 
     // --- INICIALIZACIÓN DE LA APP PRINCIPAL ---
 
@@ -409,14 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
             userModal.style.display = 'none';
         });
 
-        reportBtn.addEventListener('click', async () => {
-            await showReport(currentYear, currentMonth);
-            reportModal.style.display = 'flex';
-        });
-
-        closeReportModalBtn.addEventListener('click', () => {
-            reportModal.style.display = 'none';
-        });
+        
 
         addUserBtn.addEventListener('click', () => {
             const userData = {
