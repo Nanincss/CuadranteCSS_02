@@ -435,6 +435,10 @@ main {
     .editor-info { font-size: 0.8em; color: #555 !important; }
     /* Ocultar resaltados de búsqueda */
     #calendar td.highlight, #calendar td.highlight-target { border: 1px solid #aaa; background-color: transparent !important; animation: none; }
+
+    .no-print {
+        display: none !important;
+    }
 }
 
 @keyframes highlight-fade {

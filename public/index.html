@@ -13,7 +13,7 @@
     <div id="main-container" style="display: none;">
         <header>
             <h1>Cuadrante Planificador</h1>
-            <div class="controls">
+            <div class="controls no-print">
                 <div class="control-group">
                     <span id="user-greeting"></span>
                     <button id="manage-users-btn" title="Gestionar usuarios">⚙️</button>
@@ -40,6 +40,9 @@
                     <label for="year-select">Año:</label>
                     <select id="year-select"></select>
                 </div>
+                <div class="control-group">
+                    <button id="print-calendar-btn" title="Imprimir Cuadrante">🖨️ Imprimir</button>
+                </div>
             </div>
             <!-- ... (otros controles como la búsqueda) ... -->
         </header>
@@ -51,7 +54,7 @@
     </div>
 
     <!-- Ventana Modal para Gestionar Usuarios -->
-    <div id="user-modal" class="modal-overlay" style="display: none;">
+    <div id="user-modal" class="modal-overlay no-print" style="display: none;">
         <div class="modal-content">
             <h2>Gestionar Usuarios</h2>
             <ul id="user-list"></ul>
@@ -70,7 +73,7 @@
     </div>
 
     <!-- Ventana Modal para Login -->
-    <div id="login-modal" class="modal-overlay" style="display: flex;">
+    <div id="login-modal" class="modal-overlay no-print" style="display: flex;">
         <div class="modal-content">
             <h2>Iniciar Sesión</h2>
             <p>Por favor, introduce tu identificador para continuar.</p>
@@ -83,7 +86,7 @@
     </div>
 
     <!-- Ventana Modal para Informe de Cambios -->
-    <div id="report-modal" class="modal-overlay" style="display: none;">
+    <div id="report-modal" class="modal-overlay no-print" style="display: none;">
         <div class="modal-content">
             <h2>Informe de Cambios</h2>
             <div id="report-content"></div>
@@ -93,6 +96,6 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/cuadrante.js"></script>
-    <input type="file" id="image-upload-input" accept="image/*" style="display: none;">
+    <input type="file" id="image-upload-input" accept="image/*" style="display: none;" class="no-print">
 </body>
 </html>
