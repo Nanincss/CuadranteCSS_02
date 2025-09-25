@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const monthSelect = document.getElementById('month-select');
     const yearSelect = document.getElementById('year-select');
     const printTitle = document.getElementById('print-title');
-   
+    const printCalendarBtn = document.getElementById('print-calendar-btn');
 
     // --- Login Modal ---
     const loginModal = document.getElementById('login-modal');
@@ -352,6 +352,10 @@ document.addEventListener('DOMContentLoaded', function() {
         yearSelect.addEventListener('change', (e) => {
             currentYear = parseInt(e.target.value, 10);
             renderCalendar(currentYear, currentMonth);
+        });
+
+        printCalendarBtn.addEventListener('click', () => {
+            window.print();
         });
 
         manageUsersBtn.addEventListener('click', () => {
